@@ -10,6 +10,16 @@ describe('reacesss should throw err', function() {
      //  .expect('Unauthorized access!')
        .expect(500, done);
   });
+    it('when there is no rights matching the path', function(done) {
+      testReq({
+        rightsObj: {
+          path: '/bar',
+          methods: reaccess.METHODS
+        }
+      })
+       .expect(/The rights property must be an array/)
+       .expect(500, done);
+    });
 
     it('when there is no rights matching the path', function(done) {
       testReq({
@@ -21,7 +31,7 @@ describe('reacesss should throw err', function() {
           methods: reaccess.METHODS
         }]
       })
-     //  .expect('Unauthorized access!')
+       .expect(/Unauthorized access!/)
        .expect(500, done);
     });
 
@@ -35,7 +45,7 @@ describe('reacesss should throw err', function() {
           methods: reaccess.METHODS
         }]
       })
-     //  .expect('Unauthorized access!')
+       .expect(/Unauthorized access!/)
        .expect(500, done);
     });
 
@@ -57,7 +67,7 @@ describe('reacesss should work', function() {
       .expect(200, done);
     });
 
-    it.only('when there is one templated right that match', function(done) {
+    it('when there is one templated right that match', function(done) {
       testReq({
         rightsObj: [{
           path: '/foo/:bar.ba.pa.pa/plop',

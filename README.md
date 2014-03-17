@@ -27,7 +27,7 @@ on the request object by any other middleware.
 This property must contain an `Array` of object of this kind :
 ```js
 req.user.rights = [{
- path: '/organizations/:orgID/usrrs.json'
+ path: '/organizations/:orgId/users.json'
  methods: reaccess.GET | reaccess.POST
 }];
 ```
@@ -35,8 +35,20 @@ req.user.rights = [{
 ## options.userProp
 Type: `String`
 
-This property in wich any templated value found in the path must be searched
+The property in wich any templated value found in the path must be searched
 for.
+
+By example, if the user rights are the following :
+```js
+req.user.rights = [{
+ path: '/organizations/:org.id/users.json'
+ methods: reaccess.GET | reaccess.POST
+}];
+```
+He will be able to access this URI /organizations/1/users.json if a previously
+set middleware have set the `req.user.org.id` to `1` and `options.userProp` to
+`'user'`.
+
 
 ## options.errorConstructor
 Type: `Error` "subclass"
