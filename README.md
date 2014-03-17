@@ -17,6 +17,12 @@ app.use(reaccess({
 
 ## reaccess(options)
 
+## options
+Type: `Object`
+
+The options of the reaccess middleware.
+
+
 ## options.rightsProp
 Type: `String`
 Default: `'user.rights'`
@@ -56,31 +62,35 @@ Default: `reaccess.AccessError`
 
 Allows to use your own Error contructor for reaccess access errors.
 
+# Static properties
+Reaccess use bitwise operators to match methods. The reaccess function provides
+ static constants to help you make cleaner code.
+
 ## reaccess.OPTIONS
 Type: `Number`
-Value: 1
+Value: `1`
 
 ## reaccess.GET
 Type: `Number`
-Value: 2
+Value: `2`
 
 ## reaccess.POST
 Type: `Number`
-Value: 4
+Value: `4`
 
 ## reaccess.PUT
 Type: `Number`
-Value: 8
+Value: `8`
 
 ## reaccess.PATCH
 Type: `Number`
-Value: 16
+Value: `16`
 
 ## reaccess.DELETE
 Type: `Number`
-Value: 32
+Value: `32`
 
 ## reaccess.METHODS
 Type: `Number`
-Value: 63
+Value: `63`
 
