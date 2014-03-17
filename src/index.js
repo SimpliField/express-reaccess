@@ -7,13 +7,27 @@ function reaccess(options) {
 
   return function reaccessMiddleware(req, res, next) {
     var rights = getProp(req, options.rightsProp);
+    var user;
     if(!(rights && rights instanceof Array)) {
       throw new Error('The rights property must be an array.');
     }
+    if(options.userProp) {
+      user = getProp(req, options.userProp);
+    }
     if(rights.some(function(right) {
-      return right.methods && right.path &&
+      var path = user ?
+        right.path.replace(/(.*\/|^):([a-z\.+]+)(\/.*|$)/,
+          function($, $1, $2, $3) {
+            var value = getProp(user, $2);
+            if(value) {
+              return $1 + value + $3;
+            }
+            return '';
+          }) :
+        right.path;
+      return right.methods && path &&
         right.methods&reaccess[req.method.toUpperCase()] &&
-        new RegExp('^'+right.path+'$').test(req.path);
+        new RegExp('^'+path+'$').test(req.path);
     })) {
       next();
     } else {
@@ -39,7 +53,10 @@ function getProp(obj, prop) {
   var node;
   do {
     node = nodes.shift();
-    obj = obj[node] || (obj[node] = {});
+    if(!obj[node]) {
+      return '';
+    }
+    obj = obj[node];
   } while(nodes.length);
   return obj;
 }

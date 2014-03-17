@@ -57,19 +57,46 @@ describe('reacesss should work', function() {
       .expect(200, done);
     });
 
+    it.only('when there is one templated right that match', function(done) {
+      testReq({
+        rightsObj: [{
+          path: '/foo/:bar.ba.pa.pa/plop',
+          methods: reaccess.METHODS
+        },{
+          path: '/plop/:foo/bar',
+          methods: reaccess.METHODS
+        }],
+        userProp: 'user.content',
+        userObj: {
+          bar: {
+            ba: {
+              pa: {
+                pa: 1
+              }
+            }
+          },
+          lol: 2
+        }
+      }, {
+        userProp: 'user.content'
+      }, '/foo/1/plop')
+      .expect('plop')
+      .expect(200, done);
+    });
+
 });
 
 // Helper middleware
-function testReq(props, opts) {
+function testReq(props, opts, path) {
   var app = express();
   app.use(setProps(props));
   app.use(reaccess(opts));
-  app.use('/foo', function(req, res, next) {
+  app.use(path || '/foo', function(req, res, next) {
     res.send(200, 'plop');
     next();
   });
 
-  return request(app).get('/foo');
+  return request(app).get(path || '/foo');
 }
 
 
