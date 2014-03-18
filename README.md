@@ -57,8 +57,8 @@ set middleware have set the `req.user.org.id` to `1` and `options.userProp` to
 
 
 ## options.errorConstructor
-Type: `Error` "subclass"
-Default: `reaccess.AccessError`
+Type: `Error` constructor
+Default: `Error`
 
 Allows to use your own Error contructor for reaccess access errors.
 
