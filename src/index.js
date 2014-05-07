@@ -43,7 +43,7 @@ reaccess.POST = 4;
 reaccess.PUT = 8;
 reaccess.PATCH = 16;
 reaccess.DELETE = 32;
-reaccess.METHODS = reaccess.OPTIONS | reaccess.GET |
+reaccess.METHODS = reaccess.OPTIONS | reaccess.GET |
   reaccess.POST | reaccess.PUT | reaccess.PATCH |
   reaccess.DELETE;
 
