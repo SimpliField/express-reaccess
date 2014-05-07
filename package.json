@@ -15,7 +15,8 @@
   "keywords": [
     "express",
     "auth",
-    "acess",
+    "access",
+    "rights",
     "regexp"
   ],
   "author": "Nicolas Froidure (Simplifield)",
