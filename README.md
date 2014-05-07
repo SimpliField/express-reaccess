@@ -2,6 +2,9 @@
 > Express middleware to check user access based on the ressources URIs and
  HTTP methods.
 
+
+[![NPM version](https://badge.fury.io/js/express-reaccess.png)](https://npmjs.org/package/express-reaccess) [![Build status](https://secure.travis-ci.org/simplifield/express-reaccess.png)](https://travis-ci.org/simplifield/express-reaccess) [![Dependency Status](https://david-dm.org/simplifield/express-reaccess.png)](https://david-dm.org/simplifield/express-reaccess) [![devDependency Status](https://david-dm.org/simplifield/express-reaccess/dev-status.png)](https://david-dm.org/simplifield/express-reaccess#info=devDependencies) [![Coverage Status](https://coveralls.io/repos/simplifield/express-reaccess/badge.png?branch=master)](https://coveralls.io/r/simplifield/express-reaccess?branch=master) [![Code Climate](https://codeclimate.com/github/simplifield/express-reaccess.png)](https://codeclimate.com/github/simplifield/express-reaccess)
+
 ## Usage
 ```js
 var reaccess = require('express-reaccess');
@@ -121,4 +124,11 @@ Value: `32`
 ### reaccess.METHODS
 Type: `Number`
 Value: `63`
+
+
+## Stats
+
+[![NPM](https://nodei.co/npm/express-reaccess.png?downloads=true&stars=true)](https://nodei.co/npm/express-reaccess/)
+[![NPM](https://nodei.co/npm-dl/express-reaccess.png)](https://nodei.co/npm/express-reaccess/)
+
 
