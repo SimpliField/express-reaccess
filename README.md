@@ -2,7 +2,7 @@
 > Express middleware to check user access based on the ressources URIs and
  HTTP methods.
 
-# Usage
+## Usage
 ```js
 var reaccess = require('express-reaccess');
 
@@ -13,17 +13,45 @@ app.use(reaccess({
 
 ```
 
-# API
+Assumming a middleware placed before the above example and adding a property
+ like this on the request object for a given authenticated user:
+```js
+req.user = {
+  id: 1,
+  login: 'nfroidure',
+  organization: {
+    id: 1,
+    name: 'simplifield'
+  },
+  rights: [{
+    path: '/users/:login',
+    methods: reaccess.METHODS ^ reaccess.DELETE
+  },{
+    path: '/organisations/:organization.name',
+    methods: reaccess.OPTIONS | reaccess.HEAD | reaccess.GET
+  },{
+    path: 'public/(.*)',
+    methods: reaccess.OPTIONS | reaccess.HEAD | reaccess.GET
+  }]
+};
+```
 
-## reaccess(options)
+Then, the user will be able to access the following URI/method couples:
+- OPTIONS/HEAD/GET/PUT/POST - /users/nfroidure
+- OPTIONS/HEAD/GET - /organizations/simplifield
+- OPTIONS/GET/HEAD - /public/*
 
-## options
+## API
+
+### reaccess(options)
+
+### options
 Type: `Object`
 
 The options of the reaccess middleware.
 
 
-## options.rightsProp
+### options.rightsProp
 Type: `String`
 Default: `'user.rights'`
 
@@ -38,7 +66,7 @@ req.user.rights = [{
 }];
 ```
 
-## options.userProp
+### options.userProp
 Type: `String`
 
 The property in wich any templated value found in the path must be searched
@@ -56,41 +84,41 @@ set middleware have set the `req.user.org.id` to `1` and `options.userProp` to
 `'user'`.
 
 
-## options.errorConstructor
+### options.errorConstructor
 Type: `Error` constructor
 Default: `Error`
 
 Allows to use your own Error contructor for reaccess access errors.
 
-# Static properties
+## Static properties
 Reaccess use bitwise operators to match methods. The reaccess function provides
  static constants to help you make cleaner code.
 
-## reaccess.OPTIONS
+### reaccess.OPTIONS
 Type: `Number`
 Value: `1`
 
-## reaccess.GET
+### reaccess.GET
 Type: `Number`
 Value: `2`
 
-## reaccess.POST
+### reaccess.POST
 Type: `Number`
 Value: `4`
 
-## reaccess.PUT
+### reaccess.PUT
 Type: `Number`
 Value: `8`
 
-## reaccess.PATCH
+### reaccess.PATCH
 Type: `Number`
 Value: `16`
 
-## reaccess.DELETE
+### reaccess.DELETE
 Type: `Number`
 Value: `32`
 
-## reaccess.METHODS
+### reaccess.METHODS
 Type: `Number`
 Value: `63`
 
