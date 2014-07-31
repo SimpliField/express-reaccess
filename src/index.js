@@ -17,7 +17,7 @@ function reaccess(options) {
     }
     if(rights.some(function(right) {
       var path = user ?
-        right.path.replace(/(.*\/|^):([a-z\.+]+)(\/.*|$)/,
+        right.path.replace(/(.*\/|^):([a-z0-9_\-\.]+)(\/.*|$)/,
           function($, $1, $2, $3) {
             var value = getProp(user, $2);
             if(value) {
