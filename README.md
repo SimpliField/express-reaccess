@@ -11,7 +11,7 @@ var reaccess = require('express-reaccess');
 
 app.use(reaccess({
   rightsProp: 'user.rights',
-  tplValueProp: 'user'
+  userProp: 'user'
 }));
 
 ```
