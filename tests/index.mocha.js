@@ -17,8 +17,10 @@ describe('reacesss should throw err', function() {
           methods: reaccess.METHODS
         }
       })
-       .expect(/The rights property must be an array/)
-       .expect(500, done);
+      .expect(/The rights property must be an array/)
+      .expect(500, function() {
+        done();
+      });
     });
 
     it('when there is no rights matching the path', function(done) {
@@ -31,8 +33,10 @@ describe('reacesss should throw err', function() {
           methods: reaccess.METHODS
         }]
       })
-       .expect(/Unauthorized access!/)
-       .expect(500, done);
+      .expect(/Unauthorized access!/)
+      .expect(500, function() {
+        done();
+      });
     });
 
     it('when there is no rights matching the method', function(done) {
@@ -45,8 +49,10 @@ describe('reacesss should throw err', function() {
           methods: reaccess.METHODS
         }]
       })
-       .expect(/Unauthorized access!/)
-       .expect(500, done);
+      .expect(/Unauthorized access!/)
+      .expect(500, function() {
+        done();
+      });
     });
 
 });
@@ -64,7 +70,9 @@ describe('reacesss should work', function() {
         }]
       })
       .expect('plop')
-      .expect(200, done);
+      .expect(200, function() {
+        done();
+      });
     });
 
     it('when there is one templated right that match', function(done) {
@@ -91,7 +99,9 @@ describe('reacesss should work', function() {
         userProp: 'user.content'
       }, '/foo/1/plop')
       .expect('plop')
-      .expect(200, done);
+      .expect(200, function() {
+        done();
+      });
     });
 
 });
@@ -103,7 +113,9 @@ function testReq(props, opts, path) {
   app.use(reaccess(opts));
   app.use(path || '/foo', function(req, res, next) {
     res.send(200, 'plop');
-    next();
+  });
+  app.use(function(err, req, res, next) {
+    res.send(500, err.message);
   });
 
   return request(app).get(path || '/foo');
@@ -112,7 +124,7 @@ function testReq(props, opts, path) {
 
 function setProps(options) {
   options = options || {};
-  options.rightsProp = options.rightsProp || 'users.rights';
+  options.rightsProp = options.rightsProp || 'user.rights';
   options.rightsObj = options.rightsObj || [];
   options.userProp = options.userProp || '';
   options.userObj = options.userObj || {};

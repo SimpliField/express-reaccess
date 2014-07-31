@@ -1,4 +1,4 @@
-# express-reacces
+# express-reaccess
 > Express middleware to check user access based on the ressources URIs and
  HTTP methods.
 
@@ -44,6 +44,24 @@ Then, the user will be able to access the following URI/method couples:
 - OPTIONS/HEAD/GET - /organizations/simplifield
 - OPTIONS/GET/HEAD - /public/*
 
+**Warning:** Since this middleware is based on RegExp, you have to be aware of
+ RegExp special chars. By example, the following rules:
+```
+req.user.rights = [{
+  path: '/blog/posts/([0-9]+)/?page=([0-9]+)',
+  methods: reaccess.OPTIONS | reaccess.HEAD | reaccess.GET
+}]
+```
+Will allow access to 'blog/posts/1page=1' wich is probably not what you want.
+ So, do not forget to escape special chars:
+```
+req.user.rights = [{
+  path: '/blog/posts/([0-9]+)/\\?page=([0-9]+)',
+  methods: reaccess.OPTIONS | reaccess.HEAD | reaccess.GET
+}]
+```
+The best is to unit test your access rules.
+
 ## API
 
 ### reaccess(options)
@@ -86,12 +104,20 @@ He will be able to access this URI /organizations/1/users.json if a previously
 set middleware have set the `req.user.org.id` to `1` and `options.userProp` to
 `'user'`.
 
-
 ### options.errorConstructor
 Type: `Error` constructor
 Default: `Error`
 
 Allows to use your own Error contructor for reaccess access errors.
+
+### options.accessErrorMessage
+Type: `String`
+Default: `Unauthorized access!`
+
+Allows to define your own error message. Note this middleware will not throw
+ 401 responses for you. This is your responsibility to do so in your own error
+ handler middleware. Defining a custom access error message could help detect
+ when to answer with a 401 status code.
 
 ## Static properties
 Reaccess use bitwise operators to match methods. The reaccess function provides

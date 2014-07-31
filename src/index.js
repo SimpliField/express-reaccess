@@ -2,8 +2,9 @@ function reaccess(options) {
 
   options = options || {};
 
-  options.rightsProp = options.rightsProp || 'users.rights';
+  options.rightsProp = options.rightsProp || 'user.rights';
   options.errorConstructor = options.errorConstructor || Error;
+  options.accessErrorMessage = options.accessErrorMessage || 'Unauthorized access!';
 
   return function reaccessMiddleware(req, res, next) {
     var rights = getProp(req, options.rightsProp);
@@ -31,7 +32,7 @@ function reaccess(options) {
     })) {
       next();
     } else {
-      return next(new options.errorConstructor('Unauthorized access!'));
+      return next(new options.errorConstructor(options.accessErrorMessage));
     }
   };
 }
