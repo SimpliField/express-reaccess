@@ -39,14 +39,16 @@ function reaccess(options) {
 
 // Static properties
 reaccess.OPTIONS = 1;
-reaccess.GET = 2;
-reaccess.POST = 4;
-reaccess.PUT = 8;
-reaccess.PATCH = 16;
-reaccess.DELETE = 32;
-reaccess.METHODS = reaccess.OPTIONS | reaccess.GET |
-  reaccess.POST | reaccess.PUT | reaccess.PATCH |
+reaccess.HEAD = 2;
+reaccess.GET = 4;
+reaccess.POST = 8;
+reaccess.PUT = 16;
+reaccess.PATCH = 32;
+reaccess.DELETE = 64;
+reaccess.READ_MASK = reaccess.OPTIONS | reaccess.HEAD | reaccess.GET;
+reaccess.WRITE_MASK = reaccess.POST | reaccess.PUT | reaccess.PATCH |
   reaccess.DELETE;
+reaccess.ALL_MASK = reaccess.READ_MASK | reaccess.WRITE_MASK;
 
 // Helpers
 function getProp(obj, prop) {

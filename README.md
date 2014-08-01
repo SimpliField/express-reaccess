@@ -60,7 +60,9 @@ req.user.rights = [{
   methods: reaccess.OPTIONS | reaccess.HEAD | reaccess.GET
 }]
 ```
-The best is to unit test your access rules.
+The best is to unit test your access rules. Note that the ^ and $ chars are
+ respectively added to the begin/end of the regular expression nefore executing
+ her.
 
 ## API
 
@@ -127,29 +129,41 @@ Reaccess use bitwise operators to match methods. The reaccess function provides
 Type: `Number`
 Value: `1`
 
-### reaccess.GET
+### reaccess.HEAD
 Type: `Number`
 Value: `2`
 
-### reaccess.POST
+### reaccess.GET
 Type: `Number`
 Value: `4`
 
-### reaccess.PUT
+### reaccess.POST
 Type: `Number`
 Value: `8`
 
-### reaccess.PATCH
+### reaccess.PUT
 Type: `Number`
 Value: `16`
 
-### reaccess.DELETE
+### reaccess.PATCH
 Type: `Number`
 Value: `32`
 
-### reaccess.METHODS
+### reaccess.DELETE
 Type: `Number`
-Value: `63`
+Value: `64`
+
+### reaccess.READ_MASK
+Type: `Number`
+Value: `7`
+
+### reaccess.WRITE_MASK
+Type: `Number`
+Value: `120`
+
+### reaccess.ALL_MASK
+Type: `Number`
+Value: `127`
 
 
 ## Stats
