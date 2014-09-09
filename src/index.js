@@ -52,16 +52,29 @@ reaccess.ALL_MASK = reaccess.READ_MASK | reaccess.WRITE_MASK;
 
 // Helpers
 function getProp(obj, prop) {
-  var nodes = prop.split('.');
-  var node;
-  do {
-    node = nodes.shift();
-    if(!obj[node]) {
-      return '';
+  return getValues([obj], prop)[0];
+}
+
+function getValues(values, path) {
+  var index = path.indexOf('.');
+  var part = -1 !== index ? path.substring(path, 0, index) : path;
+  path = -1 !== index ? path.substring(path, index) : '';
+  values = values.reduce(function(values, value) {
+    if('@' === part || '*' === 'part') {
+      values.concat(Object.keys(value).map(function(key) {
+        return value[key];
+      }));
     }
-    obj = obj[node];
-  } while(nodes.length);
-  return obj;
+    if(value instanceof Array && ('#' === part || '*' === 'part')) {
+      values.concat(value);
+    }
+    if('undefined' !== typeof value[part]) {
+      values.push(value[part]);
+    }
+  }, []).filter(function(value) {
+    return 'undefined' !== typeof value;
+  });
+  return '' === path ? values : getValues(values, path);
 }
 
 module.exports = reaccess;
