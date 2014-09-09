@@ -16,7 +16,11 @@ function reaccess(options) {
       user = getProp(req, options.userProp);
     }
     if(rights.some(function(right) {
-      var path = user ?
+      var path = '';
+      if(!(right.methods && right.methods&reaccess[req.method.toUpperCase()])) {
+        return false;
+      }
+      path = user ?
         right.path.replace(/(.*\/|^):([a-z0-9_\-\.]+)(\/.*|$)/,
           function($, $1, $2, $3) {
             var value = getProp(user, $2);
@@ -26,9 +30,7 @@ function reaccess(options) {
             return '';
           }) :
         right.path;
-      return right.methods && path &&
-        right.methods&reaccess[req.method.toUpperCase()] &&
-        new RegExp('^'+path+'$').test(req.path);
+      return path && new RegExp('^'+path+'$').test(req.path);
     })) {
       next();
     } else {
