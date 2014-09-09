@@ -104,6 +104,35 @@ describe('reacesss should work', function() {
       });
     });
 
+    it('when there is one templated right with a wildcard that match', function(done) {
+      testReq({
+        rightsObj: [{
+          path: '/foo/:bar.ba.*.pa.*.pa/plop',
+          methods: reaccess.METHODS
+        },{
+          path: '/plop/:foo/bar',
+          methods: reaccess.METHODS
+        }],
+        userProp: 'user.content',
+        userObj: {
+          bar: {
+            ba: [{
+              pa: [{
+                pa: 1
+              }]
+            }]
+          },
+          lol: 2
+        }
+      }, {
+        userProp: 'user.content'
+      }, '/foo/1/plop')
+      .expect('plop')
+      .expect(200, function() {
+        done();
+      });
+    });
+
 });
 
 // Helper middleware
