@@ -17,8 +17,9 @@ describe('reacesss should throw err', function() {
           methods: reaccess.METHODS
         }
       })
-      .expect(/The rights property must be an array/)
-      .expect(500, function() {
+      .expect(500, /The rights property must be an array/)
+      .end(function(err, res){
+        if(err) throw err;
         done();
       });
     });
@@ -33,8 +34,26 @@ describe('reacesss should throw err', function() {
           methods: reaccess.METHODS
         }]
       })
-      .expect(/Unauthorized access!/)
-      .expect(500, function() {
+      .expect(500, /Unauthorized access!/)
+      .end(function(err, res){
+        if(err) throw err;
+        done();
+      });
+    });
+
+    it('when there is no rights matching the templated path', function(done) {
+      testReq({
+        rightsObj: [{
+          path: '/bar',
+          methods: reaccess.METHODS
+        },{
+          path: '/plop',
+          methods: reaccess.METHODS
+        }]
+      })
+      .expect(500, /Unauthorized access!/)
+      .end(function(err, res){
+        if(err) throw err;
         done();
       });
     });
@@ -42,15 +61,16 @@ describe('reacesss should throw err', function() {
     it('when there is no rights matching the method', function(done) {
       testReq({
         rightsObj: [{
-          path: '/foo',
+          path: '/foo/:bar.ba.pa.pa/plop',
           methods: reaccess.METHODS ^ reaccess.GET
         },{
           path: '/plop',
           methods: reaccess.METHODS
         }]
       })
-      .expect(/Unauthorized access!/)
-      .expect(500, function() {
+      .expect(500, /Unauthorized access!/)
+      .end(function(err, res){
+        if(err) throw err;
         done();
       });
     });
@@ -63,14 +83,15 @@ describe('reacesss should work', function() {
       testReq({
         rightsObj: [{
           path: '/foo',
-          methods: reaccess.METHODS
+          methods: reaccess.ALL_MASK
         },{
           path: '/plop',
-          methods: reaccess.METHODS
+          methods: reaccess.ALL_MASK
         }]
       })
-      .expect('plop')
-      .expect(200, function() {
+      .expect(200, 'plop')
+      .end(function(err, res){
+        if(err) throw err;
         done();
       });
     });
@@ -79,10 +100,10 @@ describe('reacesss should work', function() {
       testReq({
         rightsObj: [{
           path: '/foo/:bar.ba.pa.pa/plop',
-          methods: reaccess.METHODS
+          methods: reaccess.ALL_MASK
         },{
           path: '/plop/:foo/bar',
-          methods: reaccess.METHODS
+          methods: reaccess.ALL_MASK
         }],
         userProp: 'user.content',
         userObj: {
@@ -98,8 +119,9 @@ describe('reacesss should work', function() {
       }, {
         userProp: 'user.content'
       }, '/foo/1/plop')
-      .expect('plop')
-      .expect(200, function() {
+      .expect(200, 'plop')
+      .end(function(err, res){
+        if(err) throw err;
         done();
       });
     });
@@ -108,18 +130,20 @@ describe('reacesss should work', function() {
       testReq({
         rightsObj: [{
           path: '/foo/:bar.ba.*.pa.*.pa/plop',
-          methods: reaccess.METHODS
+          methods: reaccess.ALL_MASK
         },{
           path: '/plop/:foo/bar',
-          methods: reaccess.METHODS
+          methods: reaccess.ALL_MASK
         }],
         userProp: 'user.content',
         userObj: {
           bar: {
             ba: [{
-              pa: [{
-                pa: 1
-              }]
+              pa: {
+                pip: {
+                  pa: 1
+                }
+              }
             }]
           },
           lol: 2
@@ -127,8 +151,41 @@ describe('reacesss should work', function() {
       }, {
         userProp: 'user.content'
       }, '/foo/1/plop')
-      .expect('plop')
-      .expect(200, function() {
+      .expect(200, 'plop')
+      .end(function(err, res){
+        if(err) throw err;
+        done();
+      });
+    });
+
+    it('when there is one templated right with a #/@ special cards that match', function(done) {
+      testReq({
+        rightsObj: [{
+          path: '/foo/:bar.ba.#.pa.@.pa/plop',
+          methods: reaccess.ALL_MASK
+        },{
+          path: '/plop/:foo/bar',
+          methods: reaccess.ALL_MASK
+        }],
+        userProp: 'user.content',
+        userObj: {
+          bar: {
+            ba: [{
+              pa: {
+                plop: {
+                  pa: 1
+                }
+              }
+            }]
+          },
+          lol: 2
+        }
+      }, {
+        userProp: 'user.content'
+      }, '/foo/1/plop')
+      .expect(200, 'plop')
+      .end(function(err, res){
+        if(err) throw err;
         done();
       });
     });

@@ -21,7 +21,7 @@ function reaccess(options) {
         return false;
       }
       path = user ?
-        right.path.replace(/(.*\/|^):([a-z0-9_\-\.]+)(\/.*|$)/,
+        right.path.replace(/(.*\/|^):([a-z0-9_\-\.\*\@\#]+)(\/.*|$)/,
           function($, $1, $2, $3) {
             var value = getProp(user, $2);
             if(value) {
@@ -59,20 +59,30 @@ function getProp(obj, prop) {
 
 function getValues(values, path) {
   var index = path.indexOf('.');
-  var part = -1 !== index ? path.substring(path, 0, index) : path;
-  path = -1 !== index ? path.substring(path, index) : '';
+  var part = -1 !== index ? path.substring(0, index) : path;
+  path = -1 !== index ? path.substring(index + 1) : '';
+  
   values = values.reduce(function(values, value) {
-    if('@' === part || '*' === 'part') {
-      values.concat(Object.keys(value).map(function(key) {
+    if((value instanceof Object) && '*' === part) {
+      values = values.concat(Object.keys(value).map(function(key) {
         return value[key];
       }));
     }
-    if(value instanceof Array && ('#' === part || '*' === 'part')) {
-      values.concat(value);
+    if((value instanceof Object) && '@' === part) {
+      values = values.concat(Object.keys(value).filter(function(key) {
+        return /^[^0-9]+$/.test(key);
+      }).map(function(key) {
+        return value[key];
+      }));
     }
-    if('undefined' !== typeof value[part]) {
+    if((value instanceof Array) && '#' === part) {
+      values = values.concat(value);
+    }
+    if(-1 === ['@', '#', '*'].indexOf(part) &&
+      'undefined' !== typeof value[part]) {
       values.push(value[part]);
     }
+    return values;
   }, []).filter(function(value) {
     return 'undefined' !== typeof value;
   });
