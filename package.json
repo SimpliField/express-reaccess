@@ -33,5 +33,8 @@
     "mocha-lcov-reporter": "0.0.1",
     "coveralls": "~2.11.1",
     "istanbul": "~0.3.0"
+  },
+  "dependencies": {
+    "escape-regexp-component": "^1.0.2"
   }
 }

@@ -1,3 +1,5 @@
+var escRegExp = require('escape-regexp-component');
+
 function reaccess(options) {
 
   options = options || {};
@@ -25,7 +27,9 @@ function reaccess(options) {
           function($, $1, $2, $3) {
             var values = getValues([user], $2);
             if(values.length) {
-              return $1 + (1 === values.length ? values[0] : '(' + values.join('|') + ')') + $3;
+              return $1 + (1 === values.length ?
+                escRegExp(values[0]) :
+                '(' + values.map(escRegExp).join('|') + ')') + $3;
             }
             return '';
           }) :

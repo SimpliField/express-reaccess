@@ -129,6 +129,30 @@ describe('reacesss should work', function() {
       });
     });
 
+    it('when a templated right contains special regexp chars', function(done) {
+      testReq({
+        rightsObj: [{
+          path: '/foo/:bar/plop',
+          methods: reaccess.ALL_MASK
+        },{
+          path: '/plop/:foo/bar',
+          methods: reaccess.ALL_MASK
+        }],
+        userProp: 'user.content',
+        userObj: {
+          bar: 'a',
+          plop: '|)}'
+        }
+      }, {
+        userProp: 'user.content'
+      }, '/foo/a/plop')
+      .expect(200, 'plop')
+      .end(function(err, res){
+        if(err) throw err;
+        done();
+      });
+    });
+
     it('when there is one templated right with a wildcard that match', function(done) {
       testReq({
         rightsObj: [{
