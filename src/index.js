@@ -7,13 +7,13 @@ function reaccess(options) {
   options.accessErrorMessage = options.accessErrorMessage || 'Unauthorized access!';
 
   return function reaccessMiddleware(req, res, next) {
-    var rights = getProp(req, options.rightsProp);
+    var rights = getValues([req], options.rightsProp)[0];
     var user;
     if(!(rights && rights instanceof Array)) {
       throw new Error('The rights property must be an array.');
     }
     if(options.userProp) {
-      user = getProp(req, options.userProp);
+      user = getValues([req], options.userProp)[0];
     }
     if(rights.some(function(right) {
       var path = '';
@@ -23,14 +23,13 @@ function reaccess(options) {
       path = user ?
         right.path.replace(/(.*\/|^):([a-z0-9_\-\.\*\@\#]+)(\/.*|$)/,
           function($, $1, $2, $3) {
-            var value = getProp(user, $2);
-            if(value) {
-              return $1 + value + $3;
+            var values = getValues([user], $2);
+            if(values.length) {
+              return $1 + (1 === values.length ? values[0] : '(' + values.join('|') + ')') + $3;
             }
             return '';
           }) :
         right.path;
-      console.log('^'+path+'$');
       return path && new RegExp('^'+path+'$').test(req.path);
     })) {
       next();
@@ -54,11 +53,6 @@ reaccess.WRITE_MASK = reaccess.POST | reaccess.PUT | reaccess.PATCH |
 reaccess.ALL_MASK = reaccess.READ_MASK | reaccess.WRITE_MASK;
 
 // Helpers
-function getProp(obj, prop) {
-  console.log('getProp:', prop, getValues([obj], prop));
-  return getValues([obj], prop)[0];
-}
-
 function getValues(values, path) {
   var index = path.indexOf('.');
   var part = -1 !== index ? path.substring(0, index) : path;

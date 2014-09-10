@@ -6,9 +6,12 @@ var express = require('express');
 describe('reacesss should throw err', function() {
 
   it('when there is no rights', function(done) {
-     testReq()
-     //  .expect('Unauthorized access!')
-       .expect(500, done);
+    testReq()
+      .expect(500, 'Unauthorized access!')
+      .end(function(err, res){
+        if(err) throw err;
+        done();
+      });
   });
     it('when there is no rights matching the path', function(done) {
       testReq({
@@ -190,7 +193,7 @@ describe('reacesss should work', function() {
       });
     });
 
-    it.only('when there is one templated right with a wildcard that match but is not the first', function(done) {
+    it('when there is one templated right with a wildcard that match but is not the first', function(done) {
       testReq({
         rightsObj: [{
           path: '/foo/:bar.ba.*.pa.*.pa/plop',
@@ -215,8 +218,7 @@ describe('reacesss should work', function() {
                 }
               }
             }]
-          },
-          lol: 2
+          }
         }
       }, {
         userProp: 'user.content'
