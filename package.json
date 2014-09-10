@@ -1,6 +1,6 @@
 {
   "name": "express-reaccess",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Express/Connect middleware to manage API access on a RegExp basis",
   "main": "src/index.js",
   "scripts": {
