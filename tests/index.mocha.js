@@ -190,6 +190,44 @@ describe('reacesss should work', function() {
       });
     });
 
+    it.only('when there is one templated right with a wildcard that match but is not the first', function(done) {
+      testReq({
+        rightsObj: [{
+          path: '/foo/:bar.ba.*.pa.*.pa/plop',
+          methods: reaccess.ALL_MASK
+        },{
+          path: '/plop/:foo/bar',
+          methods: reaccess.ALL_MASK
+        }],
+        userProp: 'user.content',
+        userObj: {
+          bar: {
+            ba: [{
+              pa: {
+                pa: {
+                  pa: 2
+                }
+              }
+            }, {
+              pa: {
+                pip: {
+                  pa: 1
+                }
+              }
+            }]
+          },
+          lol: 2
+        }
+      }, {
+        userProp: 'user.content'
+      }, '/foo/1/plop')
+      .expect(200, 'plop')
+      .end(function(err, res){
+        if(err) throw err;
+        done();
+      });
+    });
+
 });
 
 // Helper middleware

@@ -30,6 +30,7 @@ function reaccess(options) {
             return '';
           }) :
         right.path;
+      console.log('^'+path+'$');
       return path && new RegExp('^'+path+'$').test(req.path);
     })) {
       next();
@@ -54,6 +55,7 @@ reaccess.ALL_MASK = reaccess.READ_MASK | reaccess.WRITE_MASK;
 
 // Helpers
 function getProp(obj, prop) {
+  console.log('getProp:', prop, getValues([obj], prop));
   return getValues([obj], prop)[0];
 }
 
