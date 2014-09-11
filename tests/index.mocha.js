@@ -78,6 +78,24 @@ describe('reacesss should throw err', function() {
       });
     });
 
+    it('when there is a templated value with no value', function(done) {
+      testReq({
+        rightsObj: [{
+          path: '/foo/:bar.foo',
+          methods: reaccess.ALL_MASK
+        }],
+        userProp: 'user.content',
+        userObj: {}
+      }, {
+        userProp: 'user.content'
+      }, '/foo/')
+      .expect(500, /Unauthorized access!/)
+      .end(function(err, res){
+        if(err) throw err;
+        done();
+      });
+    });
+
 });
 
 describe('reacesss should work', function() {
