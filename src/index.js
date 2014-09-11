@@ -19,21 +19,26 @@ function reaccess(options) {
     }
     if(rights.some(function(right) {
       var path = '';
-      if(!(right.methods && right.methods&reaccess[req.method.toUpperCase()])) {
+      if(!('undefined' !== typeof right.methods &&
+        'undefined' !== typeof right.path &&
+        right.methods&reaccess[req.method.toUpperCase()])) {
         return false;
       }
-      path = user ?
-        right.path.replace(/(.*\/|^):([a-z0-9_\-\.\*\@\#]+)(\/.*|$)/,
-          function($, $1, $2, $3) {
-            var values = getValues([user], $2);
-            if(values.length) {
-              return $1 + (1 === values.length ?
-                escRegExp(values[0]) :
-                '(' + values.map(escRegExp).join('|') + ')') + $3;
-            }
-            return '';
-          }) :
-        right.path;
+      path = right.path;
+      if(options.userProp) {
+        while(/(.*\/|^):([a-z0-9_\-\.\*\@\#]+)(\/.*|$)/.test(path)) {
+          path = path.replace(/(.*\/|^):([a-z0-9_\-\.\*\@\#]+)(\/.*|$)/,
+            function($, $1, $2, $3) {
+              var values = getValues([user], $2);
+              if(values.length) {
+                return $1 + (1 === values.length ?
+                  escRegExp(values[0]) :
+                  '(' + values.map(escRegExp).join('|') + ')') + $3;
+              }
+              return '';
+            });
+        }
+      }
       return path && new RegExp('^'+path+'$').test(req.path);
     })) {
       next();

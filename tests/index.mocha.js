@@ -5,14 +5,14 @@ var express = require('express');
 
 describe('reacesss should throw err', function() {
 
-  it('when there is no rights', function(done) {
-    testReq()
-      .expect(500, 'Unauthorized access!')
-      .end(function(err, res){
-        if(err) throw err;
-        done();
-      });
-  });
+    it('when there is no rights', function(done) {
+      testReq()
+        .expect(500, 'Unauthorized access!')
+        .end(function(err, res){
+          if(err) throw err;
+          done();
+        });
+    });
     it('when there is no rights matching the path', function(done) {
       testReq({
         rightsObj: {
@@ -265,6 +265,27 @@ describe('reacesss should work', function() {
       }, {
         userProp: 'user.content'
       }, '/foo/1/plop')
+      .expect(200, 'plop')
+      .end(function(err, res){
+        if(err) throw err;
+        done();
+      });
+    });
+
+    it('whith several templates for a single path', function(done) {
+      testReq({
+        rightsObj: [{
+          path: '/foo/:bar/:foo',
+          methods: reaccess.ALL_MASK
+        }],
+        userProp: 'user.content',
+        userObj: {
+          bar: 'bapapa',
+          foo: 'lcontact'
+        }
+      }, {
+        userProp: 'user.content'
+      }, '/foo/bapapa/lcontact')
       .expect(200, 'plop')
       .end(function(err, res){
         if(err) throw err;
