@@ -84,10 +84,10 @@ describe('reacesss should throw err', function() {
           path: '/foo/:bar.foo',
           methods: reaccess.ALL_MASK
         }],
-        userProp: 'user.content',
+        valuesProp: 'user.content',
         userObj: {}
       }, {
-        userProp: 'user.content'
+        valuesProp: 'user.content'
       }, '/foo/')
       .expect(500, /Unauthorized access!/)
       .end(function(err, res){
@@ -102,10 +102,10 @@ describe('reacesss should throw err', function() {
           path: '/foo/:bar.foo/:bar.foo',
           methods: reaccess.ALL_MASK
         }],
-        userProp: 'user.content',
+        valuesProp: 'user.content',
         userObj: {}
       }, {
-        userProp: 'user.content'
+        valuesProp: 'user.content'
       }, '/foo//')
       .expect(500, /Unauthorized access!/)
       .end(function(err, res){
@@ -144,7 +144,7 @@ describe('reacesss should work', function() {
           path: '/plop/:foo/bar',
           methods: reaccess.ALL_MASK
         }],
-        userProp: 'user.content',
+        valuesProp: 'user.content',
         userObj: {
           bar: {
             ba: {
@@ -156,7 +156,7 @@ describe('reacesss should work', function() {
           lol: 2
         }
       }, {
-        userProp: 'user.content'
+        valuesProp: 'user.content'
       }, '/foo/1/plop')
       .expect(200, 'plop')
       .end(function(err, res){
@@ -174,13 +174,13 @@ describe('reacesss should work', function() {
           path: '/plop/:foo/bar',
           methods: reaccess.ALL_MASK
         }],
-        userProp: 'user.content',
+        valuesProp: 'user.content',
         userObj: {
           bar: 'a',
           plop: '|)}'
         }
       }, {
-        userProp: 'user.content'
+        valuesProp: 'user.content'
       }, '/foo/a/plop')
       .expect(200, 'plop')
       .end(function(err, res){
@@ -198,7 +198,7 @@ describe('reacesss should work', function() {
           path: '/plop/:foo/bar',
           methods: reaccess.ALL_MASK
         }],
-        userProp: 'user.content',
+        valuesProp: 'user.content',
         userObj: {
           bar: {
             ba: [{
@@ -212,7 +212,7 @@ describe('reacesss should work', function() {
           lol: 2
         }
       }, {
-        userProp: 'user.content'
+        valuesProp: 'user.content'
       }, '/foo/1/plop')
       .expect(200, 'plop')
       .end(function(err, res){
@@ -230,7 +230,7 @@ describe('reacesss should work', function() {
           path: '/plop/:foo/bar',
           methods: reaccess.ALL_MASK
         }],
-        userProp: 'user.content',
+        valuesProp: 'user.content',
         userObj: {
           bar: {
             ba: [{
@@ -244,7 +244,7 @@ describe('reacesss should work', function() {
           lol: 2
         }
       }, {
-        userProp: 'user.content'
+        valuesProp: 'user.content'
       }, '/foo/1/plop')
       .expect(200, 'plop')
       .end(function(err, res){
@@ -262,7 +262,7 @@ describe('reacesss should work', function() {
           path: '/plop/:foo/bar',
           methods: reaccess.ALL_MASK
         }],
-        userProp: 'user.content',
+        valuesProp: 'user.content',
         userObj: {
           bar: {
             ba: [{
@@ -281,7 +281,7 @@ describe('reacesss should work', function() {
           }
         }
       }, {
-        userProp: 'user.content'
+        valuesProp: 'user.content'
       }, '/foo/1/plop')
       .expect(200, 'plop')
       .end(function(err, res){
@@ -296,13 +296,13 @@ describe('reacesss should work', function() {
           path: '/foo/:bar/:foo',
           methods: reaccess.ALL_MASK
         }],
-        userProp: 'user.content',
+        valuesProp: 'user.content',
         userObj: {
           bar: 'bapapa',
           foo: 'lcontact'
         }
       }, {
-        userProp: 'user.content'
+        valuesProp: 'user.content'
       }, '/foo/bapapa/lcontact')
       .expect(200, 'plop')
       .end(function(err, res){
@@ -333,12 +333,12 @@ function setProps(options) {
   options = options || {};
   options.rightsProp = options.rightsProp || 'user.rights';
   options.rightsObj = options.rightsObj || [];
-  options.userProp = options.userProp || '';
+  options.valuesProp = options.valuesProp || '';
   options.userObj = options.userObj || {};
   return function (req, res, next) {
     setProp(req, options.rightsProp,  options.rightsObj);
-    if(options.userProp) {
-      setProp(req, options.userProp,  options.userObj);
+    if(options.valuesProp) {
+      setProp(req, options.valuesProp,  options.userObj);
     }
     next();
   };

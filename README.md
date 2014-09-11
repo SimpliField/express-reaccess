@@ -11,7 +11,7 @@ var reaccess = require('express-reaccess');
 
 app.use(reaccess({
   rightsProp: 'user.rights',
-  userProp: 'user'
+  valuesProp: 'user'
 }));
 
 ```
@@ -84,12 +84,12 @@ on the request object by any other middleware.
 This property must contain an `Array` of object of this kind :
 ```js
 req.user.rights = [{
- path: '/organizations/:orgId/users.json'
- methods: reaccess.GET | reaccess.POST
+  path: '/organizations/:orgId/users.json'
+  methods: reaccess.GET | reaccess.POST
 }];
 ```
 
-### options.userProp
+### options.valuesProp
 Type: `String`
 
 The property in wich any templated value found in the path must be searched
@@ -98,12 +98,12 @@ for.
 By example, if the user rights are the following :
 ```js
 req.user.rights = [{
- path: '/organizations/:org.id/users.json'
- methods: reaccess.GET | reaccess.POST
+  path: '/organizations/:org.id/users.json'
+  methods: reaccess.GET | reaccess.POST
 }];
 ```
 He will be able to access this URI /organizations/1/users.json if a previously
-set middleware have set the `req.user.org.id` to `1` and `options.userProp` to
+set middleware have set the `req.user.org.id` to `1` and `options.valuesProp` to
 `'user'`.
 
 ### options.errorConstructor
@@ -165,6 +165,42 @@ Value: `120`
 Type: `Number`
 Value: `127`
 
+## Want more ?
+
+express-reaccess supports multivalued path templates. The following rights/values couple:
+
+```
+req.user.rights = [{
+  path: '/organizations/:organizations.#.id/users/:id.json'
+  methods: reaccess.GET | reaccess.POST
+}];
+req.user.organizations = [{
+  id: 1,
+  name: 'FranceJS'
+}, {
+  id: 2,
+  name: 'ChtiJS'
+}];
+req.user.id = 3;
+```
+Will give access to GET/POST /organizations/1/users/3.json and
+ GET/POST /organizations/2/users/3.json.
+
+You also can use the express-reaccess middleware several times to bring a
+ fine access control of your API to your consumers:
+```
+// Access control based on the pricing plan of the user organization
+app.use(reaccess({
+  rightsProp: 'pricingPlan.rights',
+  valuesProp: 'organization'
+}));
+
+// Access control based on the user rights set per the organization administrator
+app.use(reaccess({
+  rightsProp: 'user.rights',
+  valuesProp: 'user'
+}));
+```
 
 ## Stats
 

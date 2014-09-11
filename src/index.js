@@ -5,6 +5,7 @@ function reaccess(options) {
   options = options || {};
 
   options.rightsProp = options.rightsProp || 'user.rights';
+  options.valuesProp = options.valuesProp || options.userProp; // Legacy
   options.errorConstructor = options.errorConstructor || Error;
   options.accessErrorMessage = options.accessErrorMessage || 'Unauthorized access!';
 
@@ -14,8 +15,8 @@ function reaccess(options) {
     if(!(rights && rights instanceof Array)) {
       throw new Error('The rights property must be an array.');
     }
-    if(options.userProp) {
-      user = getValues([req], options.userProp)[0];
+    if(options.valuesProp) {
+      user = getValues([req], options.valuesProp)[0];
     }
     if(rights.some(function(right) {
       var path = '';
@@ -25,7 +26,7 @@ function reaccess(options) {
         return false;
       }
       path = right.path;
-      if(options.userProp) {
+      if(options.valuesProp) {
         while(/(.*\/|^):([a-z0-9_\-\.\*\@\#]+)(\/.*|$)/.test(path)) {
           path = path.replace(/(.*\/|^):([a-z0-9_\-\.\*\@\#]+)(\/.*|$)/,
             function($, $1, $2, $3) {
