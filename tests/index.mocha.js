@@ -17,7 +17,7 @@ describe('reacesss should throw err', function() {
       testReq({
         rightsObj: {
           path: '/bar',
-          methods: reaccess.METHODS
+          methods: reaccess.ALL_MASK
         }
       })
       .expect(500, /The rights property must be an array/)
@@ -31,10 +31,10 @@ describe('reacesss should throw err', function() {
       testReq({
         rightsObj: [{
           path: '/bar',
-          methods: reaccess.METHODS
+          methods: reaccess.ALL_MASK
         },{
           path: '/plop',
-          methods: reaccess.METHODS
+          methods: reaccess.ALL_MASK
         }]
       })
       .expect(500, /Unauthorized access!/)
@@ -48,10 +48,10 @@ describe('reacesss should throw err', function() {
       testReq({
         rightsObj: [{
           path: '/bar',
-          methods: reaccess.METHODS
+          methods: reaccess.ALL_MASK
         },{
           path: '/plop',
-          methods: reaccess.METHODS
+          methods: reaccess.ALL_MASK
         }]
       })
       .expect(500, /Unauthorized access!/)
@@ -65,10 +65,10 @@ describe('reacesss should throw err', function() {
       testReq({
         rightsObj: [{
           path: '/foo/:bar.ba.pa.pa/plop',
-          methods: reaccess.METHODS ^ reaccess.GET
+          methods: reaccess.ALL_MASK ^ reaccess.GET
         },{
           path: '/plop',
-          methods: reaccess.METHODS
+          methods: reaccess.ALL_MASK
         }]
       })
       .expect(500, /Unauthorized access!/)
