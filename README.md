@@ -195,7 +195,7 @@ app.use(reaccess({
   valuesProp: 'organization'
 }));
 
-// Access control based on the user rights set per the organization administrator
+// Access control based on the user rights set per each organization administrator
 app.use(reaccess({
   rightsProp: 'user.rights',
   valuesProp: 'user'

@@ -11,12 +11,12 @@ function reaccess(options) {
 
   return function reaccessMiddleware(req, res, next) {
     var rights = getValues([req], options.rightsProp)[0];
-    var user;
+    var rootValues;
     if(!(rights && rights instanceof Array)) {
       throw new Error('The rights property must be an array.');
     }
     if(options.valuesProp) {
-      user = getValues([req], options.valuesProp)[0];
+      rootValues = getValues([req], options.valuesProp);
     }
     if(rights.some(function(right) {
       var path = '';
@@ -30,7 +30,7 @@ function reaccess(options) {
         while(/(.*\/|^):([a-z0-9_\-\.\*\@\#]+)(\/.*|$)/.test(path)) {
           path = path.replace(/(.*\/|^):([a-z0-9_\-\.\*\@\#]+)(\/.*|$)/,
             function($, $1, $2, $3) {
-              var values = getValues([user], $2);
+              var values = getValues(rootValues, $2);
               if(values.length) {
                 return $1 + (1 === values.length ?
                   escRegExp(values[0]) :
