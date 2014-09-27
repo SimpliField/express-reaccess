@@ -310,6 +310,34 @@ describe('reacesss should work', function() {
         done();
       });
     });
+});
+
+describe('reacesss for SimpliField should work', function() {
+
+    it('with organisations mocks ', function(done) {
+      testReq({
+        rightsProp: '_rights',
+        rightsObj: [{
+          methods: reaccess.READ_MASK,
+          path: '/organisations/:organisations_ids.#/?.*'
+        }],
+        valuesProp: '_properties',
+        userObj: {
+          organisations_ids: [
+            '54257a983d2297e607658796',
+            '540441749e2d0f3b274467f1'
+          ]
+        }
+      }, {
+        valuesProp: '_properties',
+        rightsProp: '_rights'
+      }, '/organisations/540441749e2d0f3b274467f1')
+      .expect(200, 'plop')
+      .end(function(err, res){
+        if(err) throw err;
+        done();
+      });
+    });
 
 });
 
