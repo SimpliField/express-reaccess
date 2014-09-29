@@ -10,8 +10,8 @@
 var reaccess = require('express-reaccess');
 
 app.use(reaccess({
-  rightsProp: 'user.rights',
-  valuesProp: 'user'
+  rightsProps: ['user.rights'],
+  valuesProps: ['user']
 }));
 
 ```
@@ -74,11 +74,11 @@ Type: `Object`
 The options of the reaccess middleware.
 
 
-### options.rightsProp
-Type: `String`
+### options.rightsProps
+Type: `Array` of `String`s
 Default: `'user.rights'`
 
-The property in wich the user rights will be read. This property must be filled
+The properties in wich the user rights will be read. This property must be filled
 on the request object by any other middleware.
 
 This property must contain an `Array` of object of this kind :
@@ -89,10 +89,10 @@ req.user.rights = [{
 }];
 ```
 
-### options.valuesProp
-Type: `String`
+### options.valuesProps
+Type: `Array` of `String`s
 
-The property in wich any templated value found in the path must be searched
+The properties in wich any templated value found in the path must be searched
 for.
 
 By example, if the user rights are the following :
@@ -103,8 +103,8 @@ req.user.rights = [{
 }];
 ```
 He will be able to access this URI /organizations/1/users.json if a previously
-set middleware have set the `req.user.org.id` to `1` and `options.valuesProp` to
-`'user'`.
+set middleware have set the `req.user.org.id` to `1` and `options.valuesProps` to
+`['user']`.
 
 ### options.errorConstructor
 Type: `Error` constructor
@@ -191,14 +191,14 @@ You also can use the express-reaccess middleware several times to bring a
 ```
 // Access control based on the pricing plan of the user organization
 app.use(reaccess({
-  rightsProp: 'pricingPlan.rights',
-  valuesProp: 'organization'
+  rightsProps: ['pricingPlan.rights'],
+  valuesProps: ['organization']
 }));
 
 // Access control based on the user rights set per each organization administrator
 app.use(reaccess({
-  rightsProp: 'user.rights',
-  valuesProp: 'user'
+  rightsProps: ['user.rights'],
+  valuesProps: ['user']
 }));
 ```
 

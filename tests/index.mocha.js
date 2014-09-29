@@ -20,7 +20,7 @@ describe('reacesss should throw err', function() {
           methods: reaccess.ALL_MASK
         }
       })
-      .expect(500, /The rights property must be an array/)
+      .expect(500, 'Unauthorized access!')
       .end(function(err, res){
         if(err) throw err;
         done();
@@ -123,7 +123,24 @@ describe('reacesss should work', function() {
         rightsObj: [{
           path: '/foo',
           methods: reaccess.ALL_MASK
-        },{
+        }, {
+          path: '/plop',
+          methods: reaccess.ALL_MASK
+        }]
+      })
+      .expect(200, 'plop')
+      .end(function(err, res){
+        if(err) throw err;
+        done();
+      });
+    });
+
+    it('when there is one right that match', function(done) {
+      testReq({
+        rightsObj: [{
+          path: '/foo',
+          methods: reaccess.ALL_MASK
+        }, {
           path: '/plop',
           methods: reaccess.ALL_MASK
         }]
@@ -140,7 +157,7 @@ describe('reacesss should work', function() {
         rightsObj: [{
           path: '/foo/:bar.ba.pa.pa/plop',
           methods: reaccess.ALL_MASK
-        },{
+        }, {
           path: '/plop/:foo/bar',
           methods: reaccess.ALL_MASK
         }],
@@ -170,7 +187,7 @@ describe('reacesss should work', function() {
         rightsObj: [{
           path: '/foo/:bar/plop',
           methods: reaccess.ALL_MASK
-        },{
+        }, {
           path: '/plop/:foo/bar',
           methods: reaccess.ALL_MASK
         }],
@@ -194,7 +211,7 @@ describe('reacesss should work', function() {
         rightsObj: [{
           path: '/foo/:bar.ba.*.pa.*.pa/plop',
           methods: reaccess.ALL_MASK
-        },{
+        }, {
           path: '/plop/:foo/bar',
           methods: reaccess.ALL_MASK
         }],
@@ -226,7 +243,7 @@ describe('reacesss should work', function() {
         rightsObj: [{
           path: '/foo/:bar.ba.#.pa.@.pa/plop',
           methods: reaccess.ALL_MASK
-        },{
+        }, {
           path: '/plop/:foo/bar',
           methods: reaccess.ALL_MASK
         }],
@@ -258,7 +275,7 @@ describe('reacesss should work', function() {
         rightsObj: [{
           path: '/foo/:bar.ba.*.pa.*.pa/plop',
           methods: reaccess.ALL_MASK
-        },{
+        }, {
           path: '/plop/:foo/bar',
           methods: reaccess.ALL_MASK
         }],
@@ -359,7 +376,7 @@ function testReq(props, opts, path) {
 
 function setProps(options) {
   options = options || {};
-  options.rightsProp = options.rightsProp || 'user.rights';
+  options.rightsProp = options.rightsProp || '_rights';
   options.rightsObj = options.rightsObj || [];
   options.valuesProp = options.valuesProp || '';
   options.userObj = options.userObj || {};
@@ -378,7 +395,6 @@ function setProp(obj, prop, value) {
   do {
     node = nodes.shift();
     if(nodes.length) {
-
       obj = obj[node] || (obj[node] = {});
     }
   } while(nodes.length);

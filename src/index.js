@@ -3,20 +3,30 @@ var escRegExp = require('escape-regexp-component');
 function reaccess(options) {
 
   options = options || {};
-
-  options.rightsProp = options.rightsProp || 'user.rights';
-  options.valuesProp = options.valuesProp || options.userProp; // Legacy
+  options.rightsProps = options.rightsProps ? options.rightsProps :
+    options.rightsProp ? [options.rightsProp] :
+      ['_rights'];
+  options.valuesProps = options.valuesProps ? options.valuesProps :
+    options.valuesProp ? [options.valuesProp] : // Legacy
+      options.userProp ? [options.userProp] :
+        []; // Legacy
   options.errorConstructor = options.errorConstructor || Error;
   options.accessErrorMessage = options.accessErrorMessage || 'Unauthorized access!';
 
   return function reaccessMiddleware(req, res, next) {
-    var rights = getValues([req], options.rightsProp)[0];
+    var rights = options.rightsProps.reduce(function(rights, prop) {
+      return getValues([req], prop).reduce(function(finalRights, currentRights) {
+        return finalRights.concat(currentRights);
+      }, []);
+    }, []);
     var rootValues;
     if(!(rights && rights instanceof Array)) {
       throw new Error('The rights property must be an array.');
     }
-    if(options.valuesProp) {
-      rootValues = getValues([req], options.valuesProp);
+    if(options.valuesProps) {
+      rootValues = options.valuesProps.reduce(function(values, prop) {
+        return values.concat(getValues([req], prop));
+      }, []);
     }
     if(rights.some(function(right) {
       var path = '';
@@ -26,7 +36,7 @@ function reaccess(options) {
         return false;
       }
       path = right.path;
-      if(options.valuesProp) {
+      if(options.valuesProps) {
         while(/(.*\/|^):([a-z0-9_\-\.\*\@\#]+)(\/.*|$)/.test(path)) {
           path = path.replace(/(.*\/|^):([a-z0-9_\-\.\*\@\#]+)(\/.*|$)/,
             function($, $1, $2, $3) {
