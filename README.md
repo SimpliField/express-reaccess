@@ -2,8 +2,9 @@
 > Express middleware to check user access based on the ressources URIs and
  HTTP methods.
 
-
 [![NPM version](https://badge.fury.io/js/express-reaccess.png)](https://npmjs.org/package/express-reaccess) [![Build status](https://secure.travis-ci.org/SimpliField/express-reaccess.png)](https://travis-ci.org/SimpliField/express-reaccess) [![Dependency Status](https://david-dm.org/SimpliField/express-reaccess.png)](https://david-dm.org/SimpliField/express-reaccess) [![devDependency Status](https://david-dm.org/SimpliField/express-reaccess/dev-status.png)](https://david-dm.org/SimpliField/express-reaccess#info=devDependencies) [![Coverage Status](https://coveralls.io/repos/SimpliField/express-reaccess/badge.png?branch=master)](https://coveralls.io/r/SimpliField/express-reaccess?branch=master) [![Code Climate](https://codeclimate.com/github/SimpliField/express-reaccess.png)](https://codeclimate.com/github/SimpliField/express-reaccess)
+
+See [those slides](http://slides.com/nfroidure/reaccess) to know more about the `reaccess` project principles.
 
 ## Usage
 ```js
@@ -120,6 +121,12 @@ Allows to define your own error message. Note this middleware will not throw
  401 responses for you. This is your responsibility to do so in your own error
  handler middleware. Defining a custom access error message could help detect
  when to answer with a 401 status code.
+
+### options.debug
+Type: `Function`
+Default: `undefined`
+
+Set your logging function here to get debugging informations.
 
 ## Static properties
 Reaccess use bitwise operators to match methods. The reaccess function provides
