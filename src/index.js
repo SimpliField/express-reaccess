@@ -97,6 +97,39 @@ reaccess.WRITE_MASK = reaccess.POST | reaccess.PUT | reaccess.PATCH |
   reaccess.DELETE;
 reaccess.ALL_MASK = reaccess.READ_MASK | reaccess.WRITE_MASK;
 
+// Static methods
+reaccess.methodsAsStrings = function reaccessMethodsAsStrings(methods) {
+  var strings = [];
+  if(methods&reaccess.OPTIONS) {
+    strings.push('OPTIONS');
+  }
+  if(methods&reaccess.HEAD) {
+    strings.push('HEAD');
+  }
+  if(methods&reaccess.GET) {
+    strings.push('GET');
+  }
+  if(methods&reaccess.POST) {
+    strings.push('POST');
+  }
+  if(methods&reaccess.PUT) {
+    strings.push('PUT');
+  }
+  if(methods&reaccess.PATCH) {
+    strings.push('PATCH');
+  }
+  if(methods&reaccess.DELETE) {
+    strings.push('DELETE');
+  }
+  return strings;
+};
+reaccess.stringsToMethods = function reaccessStringsToMethods(strings) {
+  return strings.reduce(function(methods, str) {
+    return methods | ('number' === typeof reaccess[str.toUpperCase()] ?
+      reaccess[str.toUpperCase()] : 0);
+  }, 0);
+};
+
 // Helpers
 function getValues(values, path) {
   var index = path.indexOf('.');

@@ -37,7 +37,7 @@ describe('reacesss should throw err', function() {
           methods: reaccess.ALL_MASK
         }]
       })
-      .expect(500, /Unauthorized access!/)
+      .expect(500, 'Unauthorized access!')
       .end(function(err, res){
         if(err) throw err;
         done();
@@ -54,7 +54,7 @@ describe('reacesss should throw err', function() {
           methods: reaccess.ALL_MASK
         }]
       })
-      .expect(500, /Unauthorized access!/)
+      .expect(500, 'Unauthorized access!')
       .end(function(err, res){
         if(err) throw err;
         done();
@@ -71,7 +71,7 @@ describe('reacesss should throw err', function() {
           methods: reaccess.ALL_MASK
         }]
       })
-      .expect(500, /Unauthorized access!/)
+      .expect(500, 'Unauthorized access!')
       .end(function(err, res){
         if(err) throw err;
         done();
@@ -89,7 +89,7 @@ describe('reacesss should throw err', function() {
       }, {
         valuesProp: 'user.content'
       }, '/foo/')
-      .expect(500, /Unauthorized access!/)
+      .expect(500, 'Unauthorized access!')
       .end(function(err, res){
         if(err) throw err;
         done();
@@ -107,7 +107,7 @@ describe('reacesss should throw err', function() {
       }, {
         valuesProp: 'user.content'
       }, '/foo//')
-      .expect(500, /Unauthorized access!/)
+      .expect(500, 'Unauthorized access!')
       .end(function(err, res){
         if(err) throw err;
         done();
@@ -327,6 +327,70 @@ describe('reacesss should work', function() {
         done();
       });
     });
+});
+
+describe('reacesss.stringsToMethods', function() {
+
+    it('should work with no strings', function() {
+      assert.deepEqual(
+        reaccess.stringsToMethods([]),
+        0
+      );
+    });
+
+    it('should work with one strings', function() {
+      assert.deepEqual(
+        reaccess.stringsToMethods(['PUT']),
+        16
+      );
+    });
+
+    it('should work with some strings', function() {
+      assert.deepEqual(
+        reaccess.stringsToMethods(['OPTIONS', 'PATCH']),
+        33
+      );
+    });
+
+    it('should work with every strings', function() {
+      assert.deepEqual(
+        reaccess.stringsToMethods(['OPTIONS', 'HEAD', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE']),
+        127
+      );
+    });
+
+});
+
+describe('reacesss.methodsAsStrings', function() {
+
+    it('should work with no strings', function() {
+      assert.deepEqual(
+        reaccess.methodsAsStrings(0),
+        []
+      );
+    });
+
+    it('should work with one strings', function() {
+      assert.deepEqual(
+        reaccess.methodsAsStrings(16),
+        ['PUT']
+      );
+    });
+
+    it('should work with some strings', function() {
+      assert.deepEqual(
+        reaccess.methodsAsStrings(33),
+        ['OPTIONS', 'PATCH']
+      );
+    });
+
+    it('should work with every strings', function() {
+      assert.deepEqual(
+        reaccess.methodsAsStrings(127),
+        ['OPTIONS', 'HEAD', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE']
+      );
+    });
+
 });
 
 describe('reacesss for SimpliField should work', function() {
