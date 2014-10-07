@@ -128,6 +128,16 @@ Default: `undefined`
 
 Set your logging function here to get debugging informations.
 
+## Static methods
+`express-reaccess` comes with some convenience static methods to deal with `methods`
+ properties.
+
+### [strings] : reaccess.methodsAsString(methods)
+Return an array of strings from the methods property of a right.
+
+### methods : reaccess.stringsToMethods(strings)
+Return the methods value of a right from an array of strings.
+
 ## Static properties
 Reaccess use bitwise operators to match methods. The reaccess function provides
  static constants to help you make cleaner code.
