@@ -219,9 +219,13 @@ app.use(reaccess({
 }));
 ```
 
+## Note for AngularJS users
+
+If you use AngularJS for your frontend, you may be interested by the
+ [`angular-reaccess`](https://github.com/SimpliField/angular-reaccess)
+ module.
+
 ## Stats
 
 [![NPM](https://nodei.co/npm/express-reaccess.png?downloads=true&stars=true)](https://nodei.co/npm/express-reaccess/)
 [![NPM](https://nodei.co/npm-dl/express-reaccess.png)](https://nodei.co/npm/express-reaccess/)
-
-
