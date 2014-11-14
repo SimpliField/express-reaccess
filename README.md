@@ -132,7 +132,7 @@ Set your logging function here to get debugging informations.
 `express-reaccess` comes with some convenience static methods to deal with `methods`
  properties.
 
-### [strings] : reaccess.methodsAsString(methods)
+### [strings] : reaccess.methodsAsStrings(methods)
 Return an array of strings from the methods property of a right.
 
 ### methods : reaccess.stringsToMethods(strings)
