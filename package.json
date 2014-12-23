@@ -35,6 +35,7 @@
     "istanbul": "~0.3.0"
   },
   "dependencies": {
-    "escape-regexp-component": "^1.0.2"
+    "miniquery": "^1.0.0",
+    "regexp-tpl": "^1.0.0"
   }
 }

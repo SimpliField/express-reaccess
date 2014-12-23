@@ -1,4 +1,5 @@
-var escRegExp = require('escape-regexp-component');
+var miniquery = require('miniquery');
+var regexpTpl = require('regexp-tpl');
 
 function reaccess(options) {
 
@@ -14,12 +15,12 @@ function reaccess(options) {
   options.accessErrorMessage = options.accessErrorMessage || 'Unauthorized access!';
 
   return function reaccessMiddleware(req, res, next) {
-    var rights;
+    var rights, regExp;
     if(options.debug) {
       options.debug('Checking access for:"', req.path);
     }
     rights = options.rightsProps.reduce(function(rights, prop) {
-      return getValues([req], prop).reduce(function(finalRights, currentRights) {
+      return miniquery(prop, [req]).reduce(function(finalRights, currentRights) {
         return finalRights.concat(currentRights);
       }, []);
     }, []);
@@ -33,7 +34,7 @@ function reaccess(options) {
     }
     if(options.valuesProps) {
       rootValues = options.valuesProps.reduce(function(values, prop) {
-        return values.concat(getValues([req], prop));
+        return values.concat(miniquery(prop, [req]));
       }, []);
       if(options.debug) {
         options.debug('Values properties "' + options.valuesProps.join(',') +
@@ -56,21 +57,8 @@ function reaccess(options) {
         return false;
       }
       path = right.path;
-      if(options.valuesProps) {
-        while(/(.*\/|^):([a-z0-9_\-\.\*\@\#]+)(\/.*|$)/.test(path)) {
-          path = path.replace(/(.*\/|^):([a-z0-9_\-\.\*\@\#]+)(\/.*|$)/,
-            function($, $1, $2, $3) {
-              var values = getValues(rootValues, $2);
-              if(values.length) {
-                return $1 + (1 === values.length ?
-                  escRegExp(values[0]) :
-                  '(' + values.map(escRegExp).join('|') + ')') + $3;
-              }
-              return '';
-            });
-        }
-      }
-      result = path && new RegExp('^'+path+'$').test(req.path);
+      regExp = regexpTpl(rootValues, path, '', /(.*\/|^):([a-z0-9_\-\.\*\@\#]+)(\/.*|$)/);
+      result = regExp && regExp.test(req.path);
       if(options.debug) {
         options.debug('Testing : /^' + path.replace('/', '\\/') + '$/"' +
           ' on "' + req.path + '" led to ' + (result ? 'SUCCESS' : 'FAILURE'));
@@ -129,38 +117,5 @@ reaccess.stringsToMethods = function reaccessStringsToMethods(strings) {
       reaccess[str.toUpperCase()] : 0);
   }, 0);
 };
-
-// Helpers
-function getValues(values, path) {
-  var index = path.indexOf('.');
-  var part = -1 !== index ? path.substring(0, index) : path;
-  path = -1 !== index ? path.substring(index + 1) : '';
-
-  values = values.reduce(function(values, value) {
-    if((value instanceof Object) && '*' === part) {
-      values = values.concat(Object.keys(value).map(function(key) {
-        return value[key];
-      }));
-    }
-    if((value instanceof Object) && '@' === part) {
-      values = values.concat(Object.keys(value).filter(function(key) {
-        return /^[^0-9]+$/.test(key);
-      }).map(function(key) {
-        return value[key];
-      }));
-    }
-    if((value instanceof Array) && '#' === part) {
-      values = values.concat(value);
-    }
-    if(-1 === ['@', '#', '*'].indexOf(part) &&
-      'undefined' !== typeof value[part]) {
-      values.push(value[part]);
-    }
-    return values;
-  }, []).filter(function(value) {
-    return 'undefined' !== typeof value;
-  });
-  return '' === path ? values : getValues(values, path);
-}
 
 module.exports = reaccess;
