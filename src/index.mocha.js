@@ -11,10 +11,7 @@ describe('reacesss should throw err', () => {
     testReq()
       .expect(500, 'Unauthorized access!')
       .end((err) => {
-        if(err) {
-          done(err);
-          return;
-        }
+        assert(err);
         done();
       });
   });
@@ -28,10 +25,7 @@ describe('reacesss should throw err', () => {
     })
     .expect(500, 'Unauthorized access!')
     .end((err) => {
-      if(err) {
-        done(err);
-        return;
-      }
+      assert(err);
       done();
     });
   });
@@ -48,10 +42,7 @@ describe('reacesss should throw err', () => {
     })
     .expect(500, 'Unauthorized access!')
     .end((err) => {
-      if(err) {
-        done(err);
-        return;
-      }
+      assert(err);
       done();
     });
   });
@@ -68,10 +59,7 @@ describe('reacesss should throw err', () => {
     })
     .expect(500, 'Unauthorized access!')
     .end((err) => {
-      if(err) {
-        done(err);
-        return;
-      }
+      assert(err);
       done();
     });
   });
@@ -88,10 +76,7 @@ describe('reacesss should throw err', () => {
     })
     .expect(500, 'Unauthorized access!')
     .end((err) => {
-      if(err) {
-        done(err);
-        return;
-      }
+      assert(err);
       done();
     });
   });
@@ -109,10 +94,7 @@ describe('reacesss should throw err', () => {
     }, '/foo/')
     .expect(500, 'Unauthorized access!')
     .end((err) => {
-      if(err) {
-        done(err);
-        return;
-      }
+      assert(err);
       done();
     });
   });
@@ -130,10 +112,7 @@ describe('reacesss should throw err', () => {
     }, '/foo//')
     .expect(500, 'Unauthorized access!')
     .end((err) => {
-      if(err) {
-        done(err);
-        return;
-      }
+      assert(err);
       done();
     });
   });
@@ -477,14 +456,15 @@ describe('reacesss for SimpliField should work', () => {
 
 // Helper middleware
 function testReq(props, opts, path) {
-  var app = express();
+  const app = express();
+
   app.use(setProps(props));
   app.use(reaccess(opts));
   app.use(path || '/foo', (req, res) => {
-    res.send(200, 'plop');
+    res.status(200).send('plop');
   });
   app.use((err, req, res) => {
-    res.send(500, err.message);
+    res.status(500).send(err.message);
   });
 
   return request(app).get(path || '/foo');
@@ -507,8 +487,9 @@ function setProps(options) {
 }
 
 function setProp(obj, prop, value) {
-  var nodes = prop.split('.');
-  var node;
+  const nodes = prop.split('.');
+  let node;
+
   do {
     node = nodes.shift();
     if(nodes.length) {
