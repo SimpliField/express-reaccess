@@ -6,7 +6,7 @@ function reaccess(options) {
 
   options = options || {};
   options.rightsProps = options.rightsProps || ['_rights'];
-  options.valuesProps = options.valuesProps  || ['user'];
+  options.valuesProps = options.valuesProps  || [];
   options.errorConstructor = options.errorConstructor || Error;
   options.accessErrorMessage = options.accessErrorMessage || 'Unauthorized access!';
 
@@ -55,7 +55,7 @@ reaccess.test = function reaccessTest(rights, values, method, path) {
       debug('Method "' + method + '" do not match methods:"', right.methods);
       return false;
     }
-    regExp = regexpTpl(values, right.path, '', /(.*\/|^):([a-z0-9_\-\.\*\@\#]+)(\/.*|$)/);
+    regExp = regexpTpl(values, '^' + right.path + '$', '', /(.*\/|\^):([a-z0-9_\-\.\*\@\#]+)(\/.*|\$)/);
     result = regExp && regExp.test(path);
     debug(
       'Testing : /^' + right.path.replace('/', '\\/') + '$/"' +
