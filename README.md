@@ -8,6 +8,7 @@
 [![devDependency Status](https://david-dm.org/SimpliField/express-reaccess/dev-status.png)](https://david-dm.org/SimpliField/express-reaccess#info=devDependencies)
 [![Coverage Status](https://coveralls.io/repos/SimpliField/express-reaccess/badge.png?branch=master)](https://coveralls.io/r/SimpliField/express-reaccess?branch=master)
 [![Code Climate](https://codeclimate.com/github/SimpliField/express-reaccess.png)](https://codeclimate.com/github/SimpliField/express-reaccess)
+[![Package Quality](http://npm.packagequality.com/shield/express-reaccess.png)](http://packagequality.com/#?package=express-reaccess)
 
 See [those slides](http://slides.com/nfroidure/reaccess) to know more about the `reaccess` project principles.
 
