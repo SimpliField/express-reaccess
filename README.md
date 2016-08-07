@@ -2,7 +2,12 @@
 > Express middleware to check user access based on the ressources URIs and
  HTTP methods.
 
-[![NPM version](https://badge.fury.io/js/express-reaccess.png)](https://npmjs.org/package/express-reaccess) [![Build status](https://secure.travis-ci.org/SimpliField/express-reaccess.png)](https://travis-ci.org/SimpliField/express-reaccess) [![Dependency Status](https://david-dm.org/SimpliField/express-reaccess.png)](https://david-dm.org/SimpliField/express-reaccess) [![devDependency Status](https://david-dm.org/SimpliField/express-reaccess/dev-status.png)](https://david-dm.org/SimpliField/express-reaccess#info=devDependencies) [![Coverage Status](https://coveralls.io/repos/SimpliField/express-reaccess/badge.png?branch=master)](https://coveralls.io/r/SimpliField/express-reaccess?branch=master) [![Code Climate](https://codeclimate.com/github/SimpliField/express-reaccess.png)](https://codeclimate.com/github/SimpliField/express-reaccess)
+[![NPM version](https://badge.fury.io/js/express-reaccess.png)](https://npmjs.org/package/express-reaccess)
+[![Build status](https://secure.travis-ci.org/SimpliField/express-reaccess.png)](https://travis-ci.org/SimpliField/express-reaccess)
+[![Dependency Status](https://david-dm.org/SimpliField/express-reaccess.png)](https://david-dm.org/SimpliField/express-reaccess)
+[![devDependency Status](https://david-dm.org/SimpliField/express-reaccess/dev-status.png)](https://david-dm.org/SimpliField/express-reaccess#info=devDependencies)
+[![Coverage Status](https://coveralls.io/repos/SimpliField/express-reaccess/badge.png?branch=master)](https://coveralls.io/r/SimpliField/express-reaccess?branch=master)
+[![Code Climate](https://codeclimate.com/github/SimpliField/express-reaccess.png)](https://codeclimate.com/github/SimpliField/express-reaccess)
 
 See [those slides](http://slides.com/nfroidure/reaccess) to know more about the `reaccess` project principles.
 
@@ -11,33 +16,32 @@ See [those slides](http://slides.com/nfroidure/reaccess) to know more about the 
 var reaccess = require('express-reaccess');
 
 app.use(reaccess({
-  rightsProps: ['user.rights'],
-  valuesProps: ['user']
+  rightsProps: ['_rights'],
+  valuesProps: ['_user'],
 }));
-
 ```
 
-Assumming a middleware placed before the above example and adding a property
+Assumming a middleware placed before the above example and adding properties
  like this on the request object for a given authenticated user:
 ```js
-req.user = {
+req._user = {
   id: 1,
   login: 'nfroidure',
   organization: {
     id: 1,
-    name: 'simplifield'
+    name: 'simplifield',
   },
-  rights: [{
-    path: '/users/:login',
-    methods: reaccess.METHODS ^ reaccess.DELETE
-  },{
-    path: '/organisations/:organization.name',
-    methods: reaccess.OPTIONS | reaccess.HEAD | reaccess.GET
-  },{
-    path: 'public/(.*)',
-    methods: reaccess.OPTIONS | reaccess.HEAD | reaccess.GET
-  }]
 };
+req._rights = [{
+  path: '/users/:login',
+  methods: reaccess.METHODS ^ reaccess.DELETE,
+}, {
+  path: '/organisations/:organization.name',
+  methods: reaccess.OPTIONS | reaccess.HEAD | reaccess.GET,
+}, {
+  path: 'public/(.*)',
+  methods: reaccess.OPTIONS | reaccess.HEAD | reaccess.GET,
+}];
 ```
 
 Then, the user will be able to access the following URI/method couples:
@@ -48,21 +52,21 @@ Then, the user will be able to access the following URI/method couples:
 **Warning:** Since this middleware is based on RegExp, you have to be aware of
  RegExp special chars. By example, the following rules:
 ```
-req.user.rights = [{
+req._rights = [{
   path: '/blog/posts/([0-9]+)/?page=([0-9]+)',
-  methods: reaccess.OPTIONS | reaccess.HEAD | reaccess.GET
-}]
+  methods: reaccess.OPTIONS | reaccess.HEAD | reaccess.GET,
+}];
 ```
-Will allow access to 'blog/posts/1page=1' wich is probably not what you want.
+Will allow access to 'blog/posts/1page=1' which is probably not what you want.
  So, do not forget to escape special chars:
 ```
-req.user.rights = [{
+req._rights = [{
   path: '/blog/posts/([0-9]+)/\\?page=([0-9]+)',
-  methods: reaccess.OPTIONS | reaccess.HEAD | reaccess.GET
-}]
+  methods: reaccess.OPTIONS | reaccess.HEAD | reaccess.GET,
+}];
 ```
 The best is to unit test your access rules. Note that the ^ and $ chars are
- respectively added to the begin/end of the regular expression nefore executing
+ respectively added to the begin/end of the regular expression before executing
  her.
 
 ## API
@@ -93,7 +97,7 @@ req.user.rights = [{
 ### options.valuesProps
 Type: `Array` of `String`s
 
-The properties in wich any templated value found in the path must be searched
+The properties in which any templated value found in the path must be searched
 for.
 
 By example, if the user rights are the following :
@@ -190,7 +194,7 @@ Value: `127`
 express-reaccess supports multivalued path templates. The following rights/values couple:
 
 ```
-req.user.rights = [{
+req._rights = [{
   path: '/organizations/:organizations.#.id/users/:id.json'
   methods: reaccess.GET | reaccess.POST
 }];
