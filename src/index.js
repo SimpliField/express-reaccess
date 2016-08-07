@@ -1,5 +1,6 @@
 var miniquery = require('miniquery');
 var regexpTpl = require('regexp-tpl');
+var debug = require('debug')('reacess');
 
 function reaccess(options) {
 
@@ -16,18 +17,17 @@ function reaccess(options) {
 
   return function reaccessMiddleware(req, res, next) {
     var rights, regExp;
-    if(options.debug) {
-      options.debug('Checking access for:"', req.path);
-    }
+
+    debug('Checking access for:"', req.path);
     rights = options.rightsProps.reduce(function(rights, prop) {
       return miniquery(prop, [req]).reduce(function(finalRights, currentRights) {
         return finalRights.concat(currentRights);
       }, []);
     }, []);
-    if(options.debug) {
-      options.debug('Rights properties "' + options.rightsProps.join(',') + '"' +
-        ' has been resolved to:', rights);
-    }
+    debug(
+      'Rights properties "' + options.rightsProps.join(',') + '"' +
+      ' has been resolved to:', rights
+    );
     var rootValues;
     if(!(rights && rights instanceof Array)) {
       throw new Error('The rights property must be an array.');
@@ -36,33 +36,28 @@ function reaccess(options) {
       rootValues = options.valuesProps.reduce(function(values, prop) {
         return values.concat(miniquery(prop, [req]));
       }, []);
-      if(options.debug) {
-        options.debug('Values properties "' + options.valuesProps.join(',') +
-          '" has been resolved to:', rootValues);
-      }
+      debug(
+        'Values properties "' + options.valuesProps.join(',') +
+        '" has been resolved to:', rootValues
+      );
     }
     if(rights.some(function(right) {
       var path = '';
       var result = false;
-      if(options.debug) {
-        options.debug('Evaluating right:"', right);
-      }
+      debug('Evaluating right:"', right);
       if(!('undefined' !== typeof right.methods &&
         'undefined' !== typeof right.path &&
         right.methods&reaccess[req.method.toUpperCase()])) {
-        if(options.debug) {
-          options.debug('Method "' + req.method + '" do not match methods:"',
-            right.methods);
-        }
+        debug('Method "' + req.method + '" do not match methods:"', right.methods);
         return false;
       }
       path = right.path;
       regExp = regexpTpl(rootValues, path, '', /(.*\/|^):([a-z0-9_\-\.\*\@\#]+)(\/.*|$)/);
       result = regExp && regExp.test(req.path);
-      if(options.debug) {
-        options.debug('Testing : /^' + path.replace('/', '\\/') + '$/"' +
-          ' on "' + req.path + '" led to ' + (result ? 'SUCCESS' : 'FAILURE'));
-      }
+      debug(
+        'Testing : /^' + path.replace('/', '\\/') + '$/"' +
+        ' on "' + req.path + '" led to ' + (result ? 'SUCCESS' : 'FAILURE')
+      );
       return result;
     })) {
       next();

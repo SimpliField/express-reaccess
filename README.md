@@ -122,12 +122,6 @@ Allows to define your own error message. Note this middleware will not throw
  handler middleware. Defining a custom access error message could help detect
  when to answer with a 401 status code.
 
-### options.debug
-Type: `Function`
-Default: `undefined`
-
-Set your logging function here to get debugging informations.
-
 ## Static methods
 `express-reaccess` comes with some convenience static methods to deal with `methods`
  properties.
@@ -218,6 +212,10 @@ app.use(reaccess({
   valuesProps: ['user']
 }));
 ```
+
+## Debugging
+
+To debug access checks, just use the `DEBUG=reacess` environnement variable.
 
 ## Note for AngularJS users
 
