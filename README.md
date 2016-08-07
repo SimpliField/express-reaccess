@@ -126,6 +126,15 @@ Allows to define your own error message. Note this middleware will not throw
 `express-reaccess` comes with some convenience static methods to deal with `methods`
  properties.
 
+### boolean : reaccess.test(rights, values, method, path)
+Return a boolean indicating if the given method/path matches the given rights.
+
+### [objects] : reaccess.getRightsFromReq(rightsProps, req)
+Extract rights from the actual request.
+
+### [any] : reaccess.getValuesFromReq(valuesProps, req)
+Extract template values from the actual request.
+
 ### [strings] : reaccess.methodsAsStrings(methods)
 Return an array of strings from the methods property of a right.
 
