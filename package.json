@@ -4,9 +4,17 @@
   "description": "Express/Connect middleware to manage API access on a RegExp basis",
   "main": "src/index.js",
   "scripts": {
-    "test": "node_modules/mocha/bin/mocha tests/*.mocha.js",
-    "coveralls": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha --report lcovonly -- tests/*.mocha.js -R spec -t 5000 && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
-    "cover": "./node_modules/istanbul/lib/cli.js cover --report html ./node_modules/mocha/bin/_mocha -- tests/*.mocha.js -R spec -t 5000"
+    "test": "mocha src/*.mocha.js",
+    "cover": "istanbul cover --report html _mocha -- src/**/*.mocha.js -R spec -t 5000",
+    "coveralls:build": "istanbul cover --include-all-sources _mocha --report lcovonly -- src/**/*.mocha.js -R spec -t 5000",
+    "coveralls:send": "cat ./coverage/lcov.info | coveralls && rm -rf ./coverage/lcov.info",
+    "coveralls": "npm run coveralls:build && npm run coveralls:send",
+    "lint": "eslint src/**/*.js",
+    "cli": "env NPM_RUN_CLI=1",
+    "preversion": "npm test && npm run lint"
+  },
+  "engines": {
+    "node": ">=4"
   },
   "repository": {
     "type": "git",
@@ -27,12 +35,14 @@
     "url": "https://github.com/SimpliField/express-reaccess/issues"
   },
   "devDependencies": {
-    "mocha": "~2.1.0",
-    "supertest": "~0.15.0",
-    "express": "~4.10.6",
-    "mocha-lcov-reporter": "0.0.1",
     "coveralls": "~2.11.2",
-    "istanbul": "~0.3.5"
+    "eslint": "^3.2.2",
+    "eslint-config-simplifield": "^3.0.0",
+    "express": "~4.10.6",
+    "istanbul": "~0.3.5",
+    "mocha": "~2.1.0",
+    "mocha-lcov-reporter": "0.0.1",
+    "supertest": "~0.15.0"
   },
   "dependencies": {
     "debug": "^2.2.0",
