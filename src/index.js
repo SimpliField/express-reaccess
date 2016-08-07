@@ -5,13 +5,8 @@ var debug = require('debug')('reacess');
 function reaccess(options) {
 
   options = options || {};
-  options.rightsProps = options.rightsProps ? options.rightsProps :
-    options.rightsProp ? [options.rightsProp] :
-      ['_rights'];
-  options.valuesProps = options.valuesProps ? options.valuesProps :
-    options.valuesProp ? [options.valuesProp] : // Legacy
-      options.userProp ? [options.userProp] :
-        []; // Legacy
+  options.rightsProps = options.rightsProps || ['_rights'];
+  options.valuesProps = options.valuesProps  || ['user'];
   options.errorConstructor = options.errorConstructor || Error;
   options.accessErrorMessage = options.accessErrorMessage || 'Unauthorized access!';
 

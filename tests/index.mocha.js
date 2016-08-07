@@ -84,10 +84,10 @@ describe('reacesss should throw err', function() {
           path: '/foo/:bar.foo',
           methods: reaccess.ALL_MASK
         }],
-        valuesProp: 'user.content',
+        valuesProps: ['user.content'],
         userObj: {}
       }, {
-        valuesProp: 'user.content'
+        valuesProps: ['user.content'],
       }, '/foo/')
       .expect(500, 'Unauthorized access!')
       .end(function(err, res){
@@ -102,10 +102,10 @@ describe('reacesss should throw err', function() {
           path: '/foo/:bar.foo/:bar.foo',
           methods: reaccess.ALL_MASK
         }],
-        valuesProp: 'user.content',
+        valuesProps: ['user.content'],
         userObj: {}
       }, {
-        valuesProp: 'user.content'
+        valuesProps: ['user.content'],
       }, '/foo//')
       .expect(500, 'Unauthorized access!')
       .end(function(err, res){
@@ -161,7 +161,7 @@ describe('reacesss should work', function() {
           path: '/plop/:foo/bar',
           methods: reaccess.ALL_MASK
         }],
-        valuesProp: 'user.content',
+        valuesProps: ['user.content'],
         userObj: {
           bar: {
             ba: {
@@ -173,7 +173,7 @@ describe('reacesss should work', function() {
           lol: 2
         }
       }, {
-        valuesProp: 'user.content'
+        valuesProps: ['user.content'],
       }, '/foo/1/plop')
       .expect(200, 'plop')
       .end(function(err, res){
@@ -191,13 +191,13 @@ describe('reacesss should work', function() {
           path: '/plop/:foo/bar',
           methods: reaccess.ALL_MASK
         }],
-        valuesProp: 'user.content',
+        valuesProps: ['user.content'],
         userObj: {
           bar: 'a',
           plop: '|)}'
         }
       }, {
-        valuesProp: 'user.content'
+        valuesProps: ['user.content'],
       }, '/foo/a/plop')
       .expect(200, 'plop')
       .end(function(err, res){
@@ -215,7 +215,7 @@ describe('reacesss should work', function() {
           path: '/plop/:foo/bar',
           methods: reaccess.ALL_MASK
         }],
-        valuesProp: 'user.content',
+        valuesProps: ['user.content'],
         userObj: {
           bar: {
             ba: [{
@@ -229,7 +229,7 @@ describe('reacesss should work', function() {
           lol: 2
         }
       }, {
-        valuesProp: 'user.content'
+        valuesProps: ['user.content'],
       }, '/foo/1/plop')
       .expect(200, 'plop')
       .end(function(err, res){
@@ -247,7 +247,7 @@ describe('reacesss should work', function() {
           path: '/plop/:foo/bar',
           methods: reaccess.ALL_MASK
         }],
-        valuesProp: 'user.content',
+        valuesProps: ['user.content'],
         userObj: {
           bar: {
             ba: [{
@@ -261,7 +261,7 @@ describe('reacesss should work', function() {
           lol: 2
         }
       }, {
-        valuesProp: 'user.content'
+        valuesProps: ['user.content'],
       }, '/foo/1/plop')
       .expect(200, 'plop')
       .end(function(err, res){
@@ -279,7 +279,7 @@ describe('reacesss should work', function() {
           path: '/plop/:foo/bar',
           methods: reaccess.ALL_MASK
         }],
-        valuesProp: 'user.content',
+        valuesProps: ['user.content'],
         userObj: {
           bar: {
             ba: [{
@@ -298,7 +298,7 @@ describe('reacesss should work', function() {
           }
         }
       }, {
-        valuesProp: 'user.content'
+        valuesProps: ['user.content'],
       }, '/foo/1/plop')
       .expect(200, 'plop')
       .end(function(err, res){
@@ -313,13 +313,13 @@ describe('reacesss should work', function() {
           path: '/foo/:bar/:foo',
           methods: reaccess.ALL_MASK
         }],
-        valuesProp: 'user.content',
+        valuesProps: ['user.content'],
         userObj: {
           bar: 'bapapa',
           foo: 'lcontact'
         }
       }, {
-        valuesProp: 'user.content'
+        valuesProps: ['user.content'],
       }, '/foo/bapapa/lcontact')
       .expect(200, 'plop')
       .end(function(err, res){
@@ -397,12 +397,12 @@ describe('reacesss for SimpliField should work', function() {
 
     it('with organisations mocks ', function(done) {
       testReq({
-        rightsProp: '_rights',
+        rightsProps: ['_rights'],
         rightsObj: [{
           methods: reaccess.READ_MASK,
           path: '/organisations/:organisations_ids.#/?.*'
         }],
-        valuesProp: '_properties',
+        valuesProps: ['_properties'],
         userObj: {
           organisations_ids: [
             '54257a983d2297e607658796',
@@ -410,8 +410,8 @@ describe('reacesss for SimpliField should work', function() {
           ]
         }
       }, {
-        valuesProp: '_properties',
-        rightsProp: '_rights'
+        valuesProps: ['_properties'],
+        rightsProps: ['_rights']
       }, '/organisations/540441749e2d0f3b274467f1')
       .expect(200, 'plop')
       .end(function(err, res){
@@ -440,14 +440,14 @@ function testReq(props, opts, path) {
 
 function setProps(options) {
   options = options || {};
-  options.rightsProp = options.rightsProp || '_rights';
+  options.rightsProps = options.rightsProps || ['_rights'];
   options.rightsObj = options.rightsObj || [];
-  options.valuesProp = options.valuesProp || '';
+  options.valuesProps = options.valuesProps || [];
   options.userObj = options.userObj || {};
   return function (req, res, next) {
-    setProp(req, options.rightsProp,  options.rightsObj);
-    if(options.valuesProp) {
-      setProp(req, options.valuesProp,  options.userObj);
+    setProp(req, options.rightsProps[0],  options.rightsObj);
+    if(options.valuesProps.length) {
+      setProp(req, options.valuesProps[0],  options.userObj);
     }
     next();
   };
@@ -464,4 +464,3 @@ function setProp(obj, prop, value) {
   } while(nodes.length);
   obj[node] = value;
 }
-
