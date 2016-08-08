@@ -2,11 +2,11 @@
 > Express middleware to check user access based on the ressources URIs and
  HTTP methods.
 
-[![NPM version](https://badge.fury.io/js/express-reaccess.png)](https://npmjs.org/package/express-reaccess)
+[![NPM version](https://badge.fury.io/js/express-reaccess.svg)](https://npmjs.org/package/express-reaccess)
 [![Build status](https://secure.travis-ci.org/SimpliField/express-reaccess.png)](https://travis-ci.org/SimpliField/express-reaccess)
 [![Dependency Status](https://david-dm.org/SimpliField/express-reaccess.png)](https://david-dm.org/SimpliField/express-reaccess)
 [![devDependency Status](https://david-dm.org/SimpliField/express-reaccess/dev-status.png)](https://david-dm.org/SimpliField/express-reaccess#info=devDependencies)
-[![Coverage Status](https://coveralls.io/repos/SimpliField/express-reaccess/badge.png?branch=master)](https://coveralls.io/r/SimpliField/express-reaccess?branch=master)
+[![Coverage Status](https://coveralls.io/repos/SimpliField/express-reaccess/badge.svg?branch=master)](https://coveralls.io/r/SimpliField/express-reaccess?branch=master)
 [![Code Climate](https://codeclimate.com/github/SimpliField/express-reaccess.png)](https://codeclimate.com/github/SimpliField/express-reaccess)
 [![Package Quality](http://npm.packagequality.com/shield/express-reaccess.png)](http://packagequality.com/#?package=express-reaccess)
 
