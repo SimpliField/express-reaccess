@@ -5,8 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "test": "mocha src/*.mocha.js",
-    "cover": "istanbul cover --report html _mocha -- src/**/*.mocha.js -R spec -t 5000",
-    "coveralls:build": "istanbul cover --include-all-sources _mocha --report lcovonly -- src/**/*.mocha.js -R spec -t 5000",
+    "cover": "istanbul cover --include-all-sources -x src/**/*.mocha.js --report html _mocha -- src/**/*.mocha.js -R spec -t 5000",
+    "coveralls:build": "istanbul cover --include-all-sources -x src/**/*.mocha.js _mocha --report lcovonly -- src/**/*.mocha.js -R spec -t 5000",
     "coveralls:send": "cat ./coverage/lcov.info | coveralls && rm -rf ./coverage/lcov.info",
     "coveralls": "npm run coveralls:build && npm run coveralls:send",
     "lint": "eslint src/**/*.js",
