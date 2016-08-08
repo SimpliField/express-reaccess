@@ -1,10 +1,13 @@
 language: node_js
 node_js:
-  - 4
-  - 6
-
+- 4
+- 6
 before_script:
-  - npm install --dev
-
+- npm install --dev
 script:
-  - npm test
+- npm test
+after_script:
+- npm run coveralls
+env:
+  matrix:
+    secure: B5XFEx8CHQHQB5e1up1BmYbW9FwK1fdrlL1FTykH77lK6hzYEfiJX8EcHqEPLP/d5K7oLmvItxE+TMRB95fpq9y7+I4xfAmENqMFOpe1OBk4vXS//vd+iCAh0wl25o/nA+YVVit0PLapu3+MOqULsWpb2hAg3lMRxNecuIlDkNQ=
