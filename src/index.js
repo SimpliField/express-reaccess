@@ -2,7 +2,7 @@
 
 const miniquery = require('miniquery');
 const regexpTpl = require('regexp-tpl');
-const debug = require('debug')('reacess');
+const debug = require('debug')('express-reaccess');
 
 function reaccess(options) {
 

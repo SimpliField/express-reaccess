@@ -229,7 +229,7 @@ app.use(reaccess({
 
 ## Debugging
 
-To debug access checks, just use the `DEBUG=reacess` environnement variable.
+To debug access checks, just use the `DEBUG=express-reaccess` environnement variable.
 
 ## Note for AngularJS users
 
