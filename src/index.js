@@ -66,7 +66,7 @@ reaccess.test = function reaccessTest(rights, values, method, path) {
     );
     result = regExp && regExp.test(path);
     debug(
-      'Testing : /^' + right.path.replace('/', '\\/') + '$/"' +
+      'Testing : /^' + right.path.replace(/\//g, '\\/') + '$/"' +
       ' on "' + path + '" led to ' + (result ? 'SUCCESS' : 'FAILURE')
     );
     return result;
