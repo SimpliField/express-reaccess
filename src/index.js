@@ -2,7 +2,7 @@
 
 const miniquery = require('miniquery');
 const regexpTpl = require('regexp-tpl');
-const debug = require('debug')('reacess');
+const debug = require('debug')('express-reaccess');
 
 function reaccess(options) {
 
@@ -66,7 +66,7 @@ reaccess.test = function reaccessTest(rights, values, method, path) {
     );
     result = regExp && regExp.test(path);
     debug(
-      'Testing : /^' + right.path.replace('/', '\\/') + '$/"' +
+      'Testing : /^' + right.path.replace(/\//g, '\\/') + '$/"' +
       ' on "' + path + '" led to ' + (result ? 'SUCCESS' : 'FAILURE')
     );
     return result;
